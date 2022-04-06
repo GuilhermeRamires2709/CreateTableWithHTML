@@ -1,0 +1,53 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+    <!-- Tile 1 -->
+    <aura:attribute name="style" type="String" default="1:1" />
+    <aura:attribute name="image1" type="String" default="https://www.enelchile.cl/content/enel-cl/es/megamenu/inversionistas/archive/2016/10/estatutos/jcr:content/carousel/items/image.img.png/1512668202855.png" />
+    <aura:attribute name="url1" type="String" default="" />
+    <aura:attribute name="title1" type="String" default="" />
+    <aura:attribute name="color1" type="String" default="#FFF" />
+    
+    <aura:attribute name="image2" type="String" default="" />
+    <aura:attribute name="url2" type="String" default="" />
+    <aura:attribute name="title2" type="String" default="" />
+    <aura:attribute name="color2" type="String" default="#FFF" />
+    
+    <aura:attribute name="image3" type="String" default="" />
+    <aura:attribute name="url3" type="String" default="" />
+    <aura:attribute name="title3" type="String" default="" />
+    <aura:attribute name="color3" type="String" default="#FFF" />
+    
+    
+    <div class="slds-grid slds-wrap" style="width: 100%;">
+        <!-- figcaption  background: #000000;background: rgba(0, 0, 0, .6);text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5); -->
+        <div class=" slds-size--1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+            <figure style="text-align: center;" >
+                <a href="{!v.url1}" class="{!v.style == '1:1' ? 'slds-image__crop--1-by-1': v.style == '16:9' ? 'slds-file__crop_16-by-9' : 'slds-file__crop_4-by-3'}">
+                    <img src="{!v.image1}" alt="Description of the image" />
+                </a>
+                <figcaption class="slds-text-heading--large" style="{! 'position: absolute;  bottom: 0;  left: 0; width: 100%;padding: 20px;color:' + v.color2 +';'}">
+                    <span class="slds-image__text slds-truncate" title="{!v.title1}">{!v.title1}</span>
+                </figcaption>
+            </figure>
+        </div>
+        <div class="slds-size--1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+            <figure style="text-align: center;" >
+                <a href="{!v.url2}" class="{!v.style == '1:1' ? 'slds-image__crop--1-by-1': v.style == '16:9' ? 'slds-file__crop_16-by-9' : 'slds-file__crop_4-by-3'}">
+                    <img src="{!v.image2}" alt="Description of the image" />
+                </a>
+                <figcaption class="slds-text-heading--large" style="{! 'position: absolute;  bottom: 0;  left: 0; width: 100%;padding: 20px;color:' + v.color2 +';'}">
+                    <span class="slds-image__text slds-truncate" title="{!v.title2}">{!v.title2}</span>
+                </figcaption>
+            </figure>
+        </div>
+        <div class="slds-size--1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+            <figure style="text-align: center;">
+                <a href="{!v.url3}" class="{!v.style == '1:1' ? 'slds-image__crop--1-by-1': v.style == '16:9' ? 'slds-file__crop_16-by-9' : 'slds-file__crop_4-by-3'}">
+                    <img src="{!v.image3}" alt="Description of the image" />
+                </a>
+                <figcaption class="slds-text-heading--large" style="{! 'position: absolute;  bottom: 0;  left: 0, width: 100%;padding: 20px;color:' + v.color3 +';'}">
+                    <span class="slds-image__text slds-truncate" title="{!v.title3}">{!v.title3}</span>
+                </figcaption>
+            </figure>
+        </div>
+    </div>
+</aura:component>

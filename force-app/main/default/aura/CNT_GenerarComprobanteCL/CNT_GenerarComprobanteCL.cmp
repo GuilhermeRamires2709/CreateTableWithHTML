@@ -1,0 +1,31 @@
+<!--
+ - Created by Yisuka Marquez
+ -->
+<aura:component controller="CNT_ContractUtilityCL" implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global" >
+    <lightning:notificationsLibrary aura:id="notificationsLib"/> 
+    <aura:attribute name="recordId" type="Id" />
+    <!-- <aura:atribute name="showSpinner" type="Boolean" default="false" />-->
+    <aura:attribute name="spinner" type="Boolean" default="true"/>
+    <aura:attribute name="fields" type="String[]"
+                    default="['Id']" />
+    <aura:attribute name="simpleRecord" type="Object"/>
+    <aura:attribute name="recordError" type="String"/>
+ 
+    <force:recordData aura:id="caseRecordHandler" 
+                      recordId="{!v.recordId}"
+                      fields="{!v.fields}"
+                      targetFields="{!v.simpleRecord}"
+                      targetError="{!v.recordError}"
+                      recordUpdated="{!c.doInit}"/>
+             
+           <!--conexion al servidor-->
+    <c:CNT_ServerActionService aura:id="server" />
+    <lightning:workspaceAPI aura:id="workspace" />
+    
+    <aura:if isTrue="{!v.spinner}">
+        <div class="slds-is-relative">
+            <lightning:spinner alternativeText="Loading" size="medium" style="padding-top:100px"/>
+        </div>
+    </aura:if>
+    
+</aura:component>

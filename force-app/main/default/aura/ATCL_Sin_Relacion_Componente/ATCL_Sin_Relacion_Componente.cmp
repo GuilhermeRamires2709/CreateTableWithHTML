@@ -1,0 +1,15 @@
+<aura:component controller = "ATCL_Sin_Relacion" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global" >
+     <lightning:workspaceAPI aura:id="workspace"/>
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    <!--Attributes-->
+    <aura:attribute name="recordId" type="String" default=""/>
+    <aura:attribute name="record" type="Object"/>
+     
+    <force:recordData layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      aura:id="recordData"
+                      targetFields="{!v.record}"
+                      fields="TypeofRelationship__c, Contact__c"
+                      recordUpdated="{!c.doInit}" />
+    
+</aura:component>

@@ -1,0 +1,10 @@
+<design:component label="Video">
+    
+    <!-- General Attributes -->
+    <design:attribute name="urlVideo" label="URL Video" description="YouTube URL of the video you want to display"/>
+    
+    <design:attribute name="Bottom" label="Padding-bottom del video" description="Bottom of YouTube video"/>
+    
+    <design:attribute name="Top" label="Padding-top" description="Top of YouTube video"/>
+    
+</design:component>

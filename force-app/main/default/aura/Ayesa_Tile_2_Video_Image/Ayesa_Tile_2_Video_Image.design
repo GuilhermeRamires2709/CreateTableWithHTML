@@ -1,0 +1,9 @@
+<design:component label="Tile Menu 2 Video">
+    
+    <design:attribute name="urlVideo" label="URL Video" description="YouTube URL of the video you want to display"/>
+	<design:attribute name="background" label="Background Color" />
+    <design:attribute name="text" label="Title" />
+    <design:attribute name="description" label="Text" />
+    <design:attribute name="textColor" label="Color" />
+
+</design:component>

@@ -1,0 +1,107 @@
+<template>
+    <div id="expandableSectionEletricCar" class={expansibleSectionCss}>
+        <h3 class="slds-section__title" style='padding-bottom:0;'>
+          <button aria-controls="expandSectionCar" aria-expanded="true" class="slds-button slds-section__title-action" onclick={handleExpansibleSection}>
+            <lightning-icon icon-name="utility:switch"
+            alternative-text="button icon"
+            size="x-small"
+            class="slds-section__title-action-icon slds-button__icon_left"></lightning-icon>
+            <span class="slds-truncate" title="Section Title">Carro Elétrico</span>
+          </button>
+        </h3>
+        <div aria-hidden="false" class="slds-section__content" id="expandSectionCar" style='padding-top:0;'>
+            <lightning-card if:false={defaultError}>
+                <div if:true={spinner} class="spin">
+                    <lightning-spinner variant="brand" alternative-text="Carregando" size="size"></lightning-spinner>
+                </div>
+
+                <!-- <lightning-card title="Carro Elétrico" class="slds-card_boundary cards-card" icon-name="standard:partner_marketing_budget"> disabled={disableButton}-->
+                    <div class="slds-m-around_small slds-align_absolute-center">
+                        <lightning-button label={clickedButtonLabel} name={clickedButtonLabel} title={clickedButtonLabel} onclick={handleClick} class="slds-m-left_x-small" disabled={disableButtonStation}></lightning-button>
+                    </div>
+
+                    <lightning-card if:true={showFieldsInsertEletricCarStation}>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input class="slds-hide id" label="id" name="id" value={eletricCarStation.id}></lightning-input>
+                            <lightning-input class="slds-hide pointOfDelivery" label="pointOfDelivery" name="pointOfDelivery" value={eletricCarStation.pointOfDelivery}></lightning-input>
+                        </div>
+
+                       <!-- <div class="slds-grid slds-wrap ">                                
+                             <div class="slds-col slds-size_1-of-1">
+                                <div class="slds-form-element__control">
+                                    <lightning-combobox name="recordTypes" class="recordType" label="Record Types" value={eletricCarStation.recordTypeId} placeholder="-Select-" options={options} onchange={handleChangeRT} required></lightning-combobox>
+                                </div>
+                            </div>
+                            <div style="margin-left:3%;">
+                                <div if:true={selectedValue}>
+                                    Selected Record Type Id: <b>{selectedValue}</b>
+                                </div>
+                            </div> 
+                        </div>-->
+
+                        <div class="slds-grid slds-wrap ">                                                            
+                            <div class="slds-col slds-size_1-of-2">                          					
+                                <!-- <lightning-input type="text" name="localAcessType" class="localAcessType" value={eletricCarStation.localAcessType} label="Local Access Type"></lightning-input> -->
+                                <lightning-combobox name="localAcessType" class="localAcessType clear" label="Local Access Type" value={eletricCarStation.localAcessType} placeholder=" - Select - " options={pickListvaluesLocalAccessType} onchange={handleChange} required></lightning-combobox>
+                            </div>
+                            <!-- <div class="slds-col slds-size_1-of-2">
+                                <lightning-input type="text" variant="standard" name="numberRechargePoints" class="numberRechargePoints"  value={eletricCarStation.numberOfRechargePointsAtTheStation} label="Number of recharge points at the station" pattern="ˆ[0-9]+$" message-when-pattern-mismatch="Only numbers are allowed" maxlength="6" required></lightning-input>
+                            </div> -->
+
+                            <!-- <div class="slds-col slds-size_1-of-2">
+                                <lightning-input type="text" variant="standard" name="installedPowerStationKw" class="installedPowerStationKw clear validate"  value={eletricCarStation.installedPowerStationKw} label="Installed Power Station(Kw)" pattern="ˆ[0-9]+$" message-when-pattern-mismatch="Only numbers are allowed" maxlength="5" required></lightning-input>
+                            </div> -->
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-input type="number" name="installedPowerStationKw" class="installedPowerStationKw clear"  value={eletricCarStation.installedPowerStationKw} label="Installed Power Station(Kw)" message-when-range-overflow="Please enter a correct value" message-when-range-underflow="Please enter a correct value" min="1" max="99999" required></lightning-input>
+                            </div>
+
+
+                            <!-- <div class="slds-col slds-size_1-of-2">
+                                <lightning-input type="text" variant="standard" name="numeroEstacoesInstaladas" class="numeroEstacoesInstaladas clear validate"  value={eletricCarStation.numeroEstacoesInstaladas} label="Número de Estações Instaladas" pattern="ˆ[0-9]+$" message-when-pattern-mismatch="Only numbers are allowed" maxlength="6" required></lightning-input>
+                            </div> -->
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-input type="number" name="numeroEstacoesInstaladas" class="numeroEstacoesInstaladas clear"  value={eletricCarStation.numeroEstacoesInstaladas} label="Número de Estações Instaladas" message-when-range-overflow="Please enter a correct value" message-when-range-underflow="Please enter a correct value" min="1" max="999999" required></lightning-input>
+                            </div>
+
+
+                            <!-- <div class="slds-col slds-size_1-of-2">
+                                <lightning-input type="text" variant="standard" name="numberOfRechargePointsAtTheStation" class="numberOfRechargePointsAtTheStation clear validate"  value={eletricCarStation.numberOfRechargePointsAtTheStation} label="Número de Pontos de Recarga por Estação" pattern="ˆ[0-9]+$" message-when-pattern-mismatch="Only numbers are allowed" maxlength="6" required></lightning-input>
+                            </div> -->
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-input type="number" name="numberOfRechargePointsAtTheStation" class="numberOfRechargePointsAtTheStation clear"  value={eletricCarStation.numberOfRechargePointsAtTheStation} label="Número de Pontos de Recarga por Estação" message-when-range-overflow="Please enter a correct value" message-when-range-underflow="Please enter a correct value" min="1" max="999999" required></lightning-input>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-2">                          					
+                                <!-- <lightning-input type="text" variant="standard" name="supportedPowerTypes" class="supportedPowerTypes" value={eletricCarStation.supportedPowerTypes} label="Supported Power Types"></lightning-input> -->
+                                <lightning-combobox name="supportedPowerTypes" class="supportedPowerTypes clear" label="Supported Power Types" value={eletricCarStation.supportedPowerTypes} placeholder=" - Select - " options={pickListvaluesSupportedPowerTypes} onchange={handleChange} required></lightning-combobox>
+                            </div>
+                            <!-- <div class="slds-col slds-size_1-of-2">
+                                <lightning-input type="text" variant="standard" name="name" id="stationInstalledOnData" value={eletricCarStation.installationDatePRVE} label="Station Installed on Date" placeholder="Station Installed on Date"></lightning-input>
+                            </div> -->
+                            <div class="slds-col slds-size_1-of-2">                          					
+                                <lightning-input type="date" name="installationDatePRVE" class="installationDatePRVE clear" value={eletricCarStation.installationDatePRVE} label="Installation Date PRVE" required></lightning-input>
+                            </div>
+                        </div>
+
+                        <div class="slds-m-around_small slds-align_absolute-center">
+                            <lightning-button label="Salvar" title="Salvar" onclick={handleClick} class="slds-m-left_x-small"></lightning-button>
+                            <!-- <lightning-button label="Clear" title="Salvar" onclick={clearInputs} class="slds-m-left_x-small"></lightning-button> -->
+                        </div>
+
+                    </lightning-card>
+                    <lightning-card if:true={showlinkDetails}>
+                        <div class="slds-m-around_small slds-align_absolute-center">
+                            <!-- <lightning-button label="Ver detalhes" name="showDetail" title='Ver detalhes da estação de veiculo elétrico' onclick={handleClickDetail} class="slds-button"></lightning-button> -->
+                            <a class="slds-button" onclick={handleClickDetail}>Ver detalhes</a>
+                        </div>
+                    </lightning-card>
+                <!-- </lightning-card> -->
+
+            </lightning-card>
+            
+            <lightning-card if:true={defaultError} title={errorTitle} icon-name="standard:first_non_empty">
+                <p class="semAcesso">{errorMessage}</p>
+            </lightning-card>
+        </div>
+      </div>
+</template>

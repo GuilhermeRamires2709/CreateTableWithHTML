@@ -1,0 +1,77 @@
+<aura:component>
+    <aura:attribute name="recordTypeId" type="String" default="" />
+
+    <aura:attribute name="cmpatt" type="String" default="placeholder='12345678'" />
+
+    <aura:attribute name="contactRecord" type="Contact" default="{'sobjectType':'Contact', 'LastName':'', 'FirstName':'', 'MothersLastName__c':'', 
+    'IdentityType__c':'1', 'IdentityNumber__c':'', 'Email':'', 'Phone':'', 'MobilePhone':'','RecordTypeId':'', 'ContactType__c': 'N' }" />
+    <aura:method name="getFormValues" action="{!c.onGetFormValues}" access="public" />
+    <lightning:recordEditForm aura:id="recordForm" objectApiName="Contact" onsubmit="{ !c.save }"
+        recordTypeId="{!v.recordTypeId}">
+        
+        <div
+            class="slds-grid slds-wrap slds-gutters slds-gutters_x-small slds-grid_pull-padded-x-small componentReferenceExamples">
+            <div class="example-box-container slds-col slds-size_1-of-1 slds-medium-size_1-of-1">
+                <div class="example-box"> <!--slds-box-->
+                    <div class="c-container">
+                        <lightning:layoutItem size="12">
+                            <lightning:messages />
+                        </lightning:layoutItem>
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element" fieldName="FirstName"
+                                                      aura:id="FirstName"
+                                                      required="true"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element" fieldName="LastName"
+                                                      aura:id="LastName" 
+                                                      required="true"/>
+                            </lightning:layoutItem>
+
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element" fieldName="MothersLastName__c"
+                                                      aura:id="MothersLastName__c" />
+                            </lightning:layoutItem>
+
+                          <!--  <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element" fieldName="Document_Type__c"
+                                    aura:id="Document_Type__c" />
+                            </lightning:layoutItem> -->
+
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element" fieldName="IdentityNumber__c"
+                                                      aura:id="IdentityNumber__c" 
+                                                      required="true"/>
+                            </lightning:layoutItem>
+
+                            <!-- <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element" fieldName="PreferredChannelContact__c"
+                                    aura:id="PreferredChannelContact__c" />
+                            </lightning:layoutItem>-->
+
+                            <lightning:layoutItem size="6">
+                            
+                            <lightning:select class="slds-form-element slds-form-element_horizontal" aura:id="PreferredChannelContact__c" name="PreferredChannelContact" label="Canal Preferente de Contacto" required="true">
+                                <option value="CAN003">Email</option>
+                                <option value="CAN005">Telefónico</option>
+                            </lightning:select>
+                            
+                        </lightning:layoutItem>
+
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element" fieldName="Email" aura:id="Email" required="true"/>
+                            </lightning:layoutItem>
+                            <!--<lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element" fieldName="Phone" aura:id="Phone" />
+                            </lightning:layoutItem>-->
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element" fieldName="MobilePhone" aura:id="MobilePhone" required="true"/>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </lightning:recordEditForm>
+</aura:component>

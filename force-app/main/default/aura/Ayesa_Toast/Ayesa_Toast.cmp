@@ -1,0 +1,25 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+    
+    <aura:attribute name="text" type="String" default="Title"/>
+    <aura:attribute name="textBody" type="String" default="Body"/>
+    <aura:attribute name="textAlign" type="String" default="Left"/>
+    <aura:attribute name="textColor" type="String" default="#ffffff"/>
+    <aura:attribute name="background" type="String" default="#666666"/>
+    
+    <div aura:id="divId" class="demo-only">
+        <div class="slds-notify_container slds-is-relative slds-position-static">
+            <div class="slds-notify slds-notify_toast" role="alert" style="{!'color:' +v.textColor+ ';background: ' +v.background+';'}">
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_medium slds-text-align_center">{!v.text}</h2>
+                    <br/>
+                    <p class="{!v.textAlign == 'Left' ? 'slds-text-body_regular slds-text-align_left' : v.textAlign =='Right' ? 'slds-text-body_regular slds-text-align_right' : 'slds-text-body_regular slds-text-align_center' }"> {!v.textBody}</p>
+                    <br/>
+                </div>
+                <button onclick="{!c.close}" class="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" title="Close">
+                    <lightning:icon iconName="utility:close" size="small" class="icon-white"/>
+                    <span class="slds-assistive-text">Cerrar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</aura:component>

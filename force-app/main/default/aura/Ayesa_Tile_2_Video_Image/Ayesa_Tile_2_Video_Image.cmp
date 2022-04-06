@@ -1,0 +1,28 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+    
+    <aura:attribute name="urlVideo" type="String" default="https://www.youtube.com/embed/O45S39f-T80" />
+    <aura:attribute name="background" type="String" default="#ff0f64"/>
+    <aura:attribute name="text" type="String" default="Title"/>
+    <aura:attribute name="description" type="String" default="Description"/>
+    <aura:attribute name="textColor" type="String" default="#FFFFFF"/>
+    
+    <div class="slds-grid slds-wrap" style="width: 100%;position: relative;overflow: hidden;">
+        <div class="slds-size--1-of-1 slds-medium-size_2-of-3 slds-large-size_2-of-3"> 
+            <c:Ayesa_Video urlVideo="{!v.urlVideo}" />
+        </div>
+        <div class="slds-size--1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3" style="{!'position: absolute;top:0;right: 0;height: 100%;background-color: '+ v.background + ';background-position: center;background-size: cover; vertical-align: middle'}">
+            <div style ="margin: auto;width:80%;" >
+                <br/>
+                <div class="slds-grid slds-grid_align-center slds-has-flexi-truncate">
+                    <div class="slds-text-heading_large slds-text-align_center">
+                        <h1 style="{!'color:' + v.textColor + ';padding-top: 50%;'}">{!v.text}</h1>
+                    </div>
+                </div>
+                <br/>
+                <div class="slds-grid slds-grid_align-center slds-has-flexi-truncate">
+                    <div class="slds-text-heading_medium" style="{!'color:' + v.textColor + ';'}">{!v.description}</div>
+                </div>
+            </div>
+        </div>
+    </div>	
+</aura:component>

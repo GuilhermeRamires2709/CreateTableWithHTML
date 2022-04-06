@@ -1,0 +1,339 @@
+<!--
+ - Created by carlos.bastidas on 4/17/2019.
+ -->
+ <aura:component description="CNT_LCMP013_NewContractCase"
+ implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+ access="global" controller="CNT_CMPC_NewContractCase">
+
+<aura:attribute name="recordId" type="Id"/>
+<aura:attribute name="sObjectName" type="String"/>
+
+<aura:attribute name="renderContract" type="Boolean" default="false"/>
+
+
+<!-- if it is true = massive case   -->
+<aura:attribute name="mCase" type="Boolean" default="false"/>
+<!-- event return case  -->
+<aura:registerEvent name="addCaseInRow" type="c:CNT_LEVT002_AddMCase"/>
+
+<!-- if it is true = cancellationContract -->
+<aura:attribute name="cancellationContract" type="Boolean" default="false"/>
+
+<lightning:workspaceAPI aura:id="workspace"/>
+
+<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+<!--d ropdown open sections-->
+<aura:attribute name="activeSections" type="List" default="['A','B','C']"/>
+<!-- create 2 aura handler with waiting and donewaiting events-->
+<aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+<aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+<!--create a component attributs -->
+<aura:attribute name="Spinner" type="boolean" default="false"/>
+<aura:attribute name="contactsErros" type="boolean" default="false"/>
+<aura:attribute name="contactsErrosDetail" type="List" />
+<!--error-->
+<aura:attribute name="error" type="Boolean"/>
+
+<!-- PointofDelivery__c -->
+<aura:attribute name="PoDId" type="Id"/>
+
+<!-- POD Address -->
+<aura:attribute name="addressId" type="Id"/>
+
+<!-- Account contact -->
+<aura:attribute name="accountApplicant" type="Contact"/>
+<!-- Account contact Owner -->
+<aura:attribute name="contactOwnerId" type="Id"/>
+<!-- Account contact Legal Reprecent -->
+<aura:attribute name="accountContactLegalReprecentId" type="Id"/>
+<aura:attribute name="isInApp" type="Boolean" default="false"/>
+
+<aura:attribute name="company" type="String"/>
+<!-- Natural person and legal -->
+<aura:attribute name="optionsAccountType" type="List"/>
+
+<!-- values -->
+<aura:attribute name="natJurValue" type="String"/>
+<aura:attribute name="reasonValue" type="string"/>
+<aura:attribute name="subCauseValue" type="string"/>
+<aura:attribute name="categoryValue" type="string"/>
+
+
+<aura:attribute name="typeContactOwnerValue" type="string"/>
+
+
+<aura:attribute name="typeContactLegalReprecentValue" type="string"/>
+<aura:attribute name="caseApplicantTypeValue" type="string"/>
+<!-- Account Contact Applicant Id -->
+<aura:attribute name="contactId" type="Id"/>
+
+<aura:attribute name="recordTypeIdCase" type="string"/>
+<lightning:navigation aura:id="navId"/>
+<!-- Previous Case -->
+<aura:attribute name="previousCase" type="Case"/>
+
+<aura:attribute name="errorAsset" type="Boolean" default="false"/>
+<aura:attribute name="errorAssetData" type="string"/>
+
+<aura:if isTrue="{!v.recordTypeIdCase != null }">
+
+<lightning:recordEditForm aura:id="recordForm"
+                   objectApiName="Case"
+                   onsubmit="{!c.save}"
+                   recordTypeId="{!v.recordTypeIdCase}">
+
+<div class="slds-grid slds-wrap slds-gutters slds-gutters_x-small slds-grid_pull-padded-x-small componentReferenceExamples">
+        <aura:if isTrue="{!v.contactsErros}">
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                    <span class="slds-assistive-text">error</span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small ">Para Continuar complete la información faltante de los contactos:</h2>
+                        <br/>
+                        <aura:iteration items="{!v.contactsErrosDetail}" var="item">
+                            <p>{!item}</p>
+                        </aura:iteration>
+                    </div>
+                </div>
+            </div>
+        </aura:if>
+        <aura:if isTrue="{!v.errorAsset}">
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                    <span class="slds-assistive-text">error</span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small ">{!v.errorAssetData}</h2>
+                    </div>
+                </div>
+            </div>
+        </aura:if>
+ <!--loading spinner start... style=Brand Medium (blue dots)-->
+ <aura:if isTrue="{!v.Spinner}">
+     <div aura:id="spinnerId" class="slds-spinner_container">
+         <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative"
+              role="alert">
+             <span class="slds-assistive-text">Loading</span>
+             <div class="slds-spinner__dot-a"></div>
+             <div class="slds-spinner__dot-b"></div>
+         </div>
+     </div>
+ </aura:if>
+ <!-- Loading spinner end-->
+
+ <!-- Error -->
+ <aura:if isTrue="{!v.error}">
+     <div class="slds-notify_container slds-is-relative">
+         <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+             <span class="slds-assistive-text">error</span>
+             <div class="slds-notify__content">
+                 <h2 class="slds-text-heading_small ">Debe seleccionar algún valor para los campos
+                     resaltados en rojo.</h2>
+             </div>
+         </div>
+     </div>
+ </aura:if>
+
+ <div class="example-box-container slds-col slds-size_1-of-1 slds-medium-size_1-of-1">
+     <div class="slds-box example-box">
+
+         <lightning:accordion activeSectionName="{!v.activeSections}"
+                              allowMultipleSectionsOpen="true">
+             <lightning:accordionSection name="A" label="Información de la Cuenta">
+                 <!-- Account type : Natural person and legal -->
+                 <fieldset class="slds-form-element slds-form-element_compound">
+                     <div class="slds-form-element__control">
+                         <div class="slds-form-element__row">
+                             <div class="slds-size_1-of-2">
+                                 <lightning:combobox label="Tipo Persona" placeholder=""
+                                                     options="{!v.optionsAccountType}"
+                                                     value="{!v.natJurValue}"
+                                                     disabled = "true"/>
+                             </div>
+                         </div>
+                     </div>
+                 </fieldset>
+             </lightning:accordionSection>
+
+
+             <!--  Case Values -->
+             <lightning:accordionSection name="B" label="Información del caso">
+
+                 <fieldset class="slds-form-element slds-form-element_compound">
+                     <div class="slds-form-element__control">
+                         <div class="slds-form-element__row">
+                             <div class="slds-size_1-of-2">
+                                 <lightning:inputField class="slds-form-element"
+                                                       fieldName="Reason"
+                                                       aura:id="Reason"
+                                                       value="{!v.reasonValue}"
+                                                       required="true"/>
+                             </div>
+                             
+                                <div class="slds-size_1-of-2">
+                                                <lightning:inputField class="slds-form-element"
+                                                                      aura:id="SubCause__c"
+                                                                      fieldName="SubCause__c"
+                                                                      value="{!v.subCauseValue}"
+                                                                      required="true"/>
+                                            </div> 
+                                 
+                         
+                     
+                             
+                         </div>
+                         <div class="slds-form-element__row">
+                             <div class="slds-size_1-of-2">
+                                 <lightning:inputField class="slds-form-element" fieldName="Category__c"
+                                                       aura:id="Category__c"
+                                                       value="{!v.categoryValue}"
+                                                       required="true"/>
+                             </div>
+                             <aura:if isTrue="{!v.PoDId != null }">
+                                 <div class="slds-size_1-of-2">
+                                     <lightning:inputField class="slds-form-element"
+                                                           fieldName="PointofDelivery__c"
+                                                           aura:id="PointofDelivery__c" disabled="false"
+                                                           value="{!v.PoDId}"/>
+                                 </div>
+                             </aura:if>
+                         </div>
+                     </div>
+                 </fieldset>
+
+             </lightning:accordionSection>
+             <lightning:accordionSection name="C" label="Identificación">
+
+                 <fieldset class="slds-form-element slds-form-element_compound">
+
+                     <div class="slds-form-element__control">
+                         <div class="slds-form-element__row">
+                             <div class="slds-size_1-of-2">
+                                 <lightning:inputField class="slds-form-element"
+                                                       fieldName="ContactId"
+                                                       aura:id="ContactId"
+                                                       value="{!v.contactOwnerId}"
+                                                       onchange="{!c.changeOwner}"
+                                                       required="true"/>
+
+                             </div>
+                             
+                             
+                             <div class="slds-size_1-of-2">
+                                 <lightning:select value="Propietario" class="slds-form-element slds-form-element_horizontal"
+                                                       aura:id="CNT_Owner_Type__c"
+                                                       name="select1"
+                                                       label="{!$Label.c.CNT_Owner_Type_label}"
+                                                       required="true">
+                                     <option selected="true" value="Propietario">{!$Label.c.CNT_Owner_Type}</option>
+                                      </lightning:select>               
+                             </div>
+                             
+                             
+                             
+                         </div>
+                     </div>
+
+                     <lightning:recordEditForm aura:id="recordFormContract"
+                                               objectApiName="Contract">
+                         <!--lightning:inputField class="slds-form-element slds-hide"
+                                               aura:id="CNT_Record_Type_Case__c"
+                                               fieldName="CNT_Record_Type_Case__c"
+                                               value="CL Alta Contrato"/-->
+                         <div class="slds-form-element__control">
+                             <div class="slds-form-element__row">
+                                 <div class="slds-size_1-of-2">
+                                     <lightning:inputField class="slds-form-element"
+                                                           aura:id="CNT_Applicant_Name__c"
+                                                           fieldName="CNT_Applicant_Name__c"
+                                                           value="{!v.contactId}"
+                                                           required="true"/>
+                                 </div>
+                                 <div class="slds-size_1-of-2">
+                                    <lightning:select class="slds-form-element slds-form-element_horizontal" 
+                                                    aura:id="CNT_Type_Case_Applicant__c" 
+                                                    name="select1" 
+                                                    label="{!$Label.c.CNT_Type_Applicant_label}"
+                                                    required="true">
+                                        <option value="Applicant">{!$Label.c.CNT_Type_Applicant}</option>
+                                    </lightning:select>
+                                    
+                                    <!--<lightning:inputField class="slds-form-element"
+                                                           aura:id="CNT_Type_Case_Applicant__c"
+                                                           fieldName="CNT_Type_Case_Applicant__c"/> -->
+
+                                 </div>
+                             </div>
+                         </div>
+
+                         <aura:if isTrue="{!v.natJurValue == 'Jur' }">
+                             <div class="slds-form-element__control">
+                                 <div class="slds-form-element__row">
+                                     <div class="slds-size_1-of-2">
+                                         <lightning:inputField class="slds-form-element"
+                                                               aura:id="CustomerSignedId"
+                                                               fieldName="CustomerSignedId"
+                                                               required="true"
+                                                               value="{!v.accountContactLegalReprecentId}"/>
+                                     </div>
+                                     <div class="slds-size_1-of-2">
+                                        <lightning:select class="slds-form-element slds-form-element_horizontal" 
+                                                    aura:id="CNT_Contact_Type_Legal_Represent__c" 
+                                                    name="select1" 
+                                                    required="true"
+                                                    label="{!$Label.c.CNT_Contact_Type_Legal_Represent_label}">
+                                            <option value="Legal Represent">{!$Label.c.CNT_Contact_Type_Legal_Represent}</option>
+                                        </lightning:select>
+
+                                        <!-- <lightning:inputField class="slds-form-element"
+                                                               aura:id="CNT_Contact_Type_Legal_Represent__c"
+                                                               fieldName="CNT_Contact_Type_Legal_Represent__c"/> -->
+
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <div class="slds-form-element__control">
+                                 <div class="slds-form-element__row">
+                                     <div class="slds-size_1-of-2">
+                                         <lightning:input type="text" class="slds-form-element"
+                                                          label="Empresa" disabled="true"
+                                                          value="{!v.company}"/>
+                                     </div>
+                                     <div class="slds-size_1-of-2">
+
+                                     </div>
+                                 </div>
+                             </div>
+                         </aura:if>
+                     </lightning:recordEditForm>
+
+                     <div class="slds-form-element__control">
+                         <div class="slds-form-element__row">
+                             <div class="slds-size_1-of-1 slds-text-align--center">
+                                 <div class="slds-button-group" role="group">
+                                     <aura:if isTrue="{!v.mCase == false}">
+                                         <lightning:button
+                                                 class="slds-form-element slds-button slds-button_brand"
+                                                 label="Crear Caso"
+                                                 type="submit"/>
+                                     </aura:if>
+                                     <aura:if isTrue="{!v.mCase == true}">
+                                         <lightning:button
+                                                 class="slds-form-element slds-button slds-button_brand"
+                                                 label="Agregar Caso"
+                                                 type="submit"/>
+                                     </aura:if>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </fieldset>
+             </lightning:accordionSection>
+         </lightning:accordion>
+     </div>
+ </div>
+</div>
+</lightning:recordEditForm>
+</aura:if>
+</aura:component>

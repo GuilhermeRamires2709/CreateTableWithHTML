@@ -1,0 +1,7 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+	<aura:attribute name="image" type="String" default="https://www.enelchile.cl/content/enel-cl/es/megamenu/conocenos/archive/2016/10/enel-distribucion-chile/jcr:content/carousel/items/image.img.jpg/1478269098820.jpg" />
+    
+    <div style="height:100%;width: 100%;background-position: center;background-size: cover;">
+        <img src="{!v.image}" style="display: block;margin: 0 auto;"/>
+    </div>
+</aura:component>

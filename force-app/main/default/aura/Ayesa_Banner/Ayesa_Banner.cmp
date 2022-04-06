@@ -1,0 +1,20 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="image" type="String" default="https://www.enelchile.cl/content/enel-cl/es/megamenu/conocenos/archive/2016/10/enel-distribucion-chile/jcr:content/carousel/items/image.img.jpg/1478269098820.jpg" />
+    <aura:attribute name="height" type="String" default="405px" />
+    <aura:attribute name="background" type="String" default="#dddbda"/>
+    <aura:attribute name="text" type="String" default="Title"/>
+    <aura:attribute name="textSize" type="Integer" default="50"/>
+    <aura:attribute name="textColor" type="String" default="#FFFFFF"/>
+    
+    <div style="{!'background-image: url(' + v.image +' );height:' + v.height +' ;background-color: '+ v.background + ';width: 100%;background-position: center;background-size: cover;'}">
+        
+        <div style ="margin: auto;width:60%;" >
+            <div class="slds-grid slds-grid_align-center slds-has-flexi-truncate">
+                <h1 style="{!'font-size:' + v.textSize + 'px;color:' + v.textColor + ';padding-top: 20%;'}">{!v.text}</h1>
+            </div>
+            <div class="slds-grid slds-grid_align-center">
+                <!-- <button class="slds-button slds-button_brand">Button</button> -->
+            </div>
+        </div>
+    </div>
+</aura:component>

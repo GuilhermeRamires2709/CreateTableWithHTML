@@ -1,0 +1,36 @@
+.a {
+  position: fixed;
+  left: auto;
+  bottom: 15px;
+  right: 20px;
+  margin: 0;
+  box-shadow: none;
+}
+
+.c{
+  background-color: #259fed;
+  font-family: "Arial", sans-serif;
+  margin-top: -40px;
+  border-radius: 50%;
+  min-width: 80px;
+  min-height: 80px;
+  box-shadow: none;
+  border-width: 0px !important;
+  color:white;
+}
+.b{
+  width: 80px;
+}
+.b::before {
+  box-shadow: none;
+  content: "";
+  position: absolute;
+  left: 72%;
+  top: 25px;
+  width: 0;
+  height: 0;
+  border-top: 13px solid transparent;
+  border-left: 26px solid #259fed;
+  border-bottom: 13px solid transparent;
+  transform: rotate(45deg);
+}

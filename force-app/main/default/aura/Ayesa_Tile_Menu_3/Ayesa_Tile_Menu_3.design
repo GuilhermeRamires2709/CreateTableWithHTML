@@ -1,0 +1,20 @@
+<design:component label="Tile Menu 3">
+    
+    <design:attribute name="style" datasource="4:3,16:9,1:1"/>
+    
+	<design:attribute name="image1" label="Image Tile 1" description="URL of the image you want to display"/>
+    <design:attribute name="url1" label="URL Tile 1" description="URL to which you will be redirected when you press the image"/>
+    <design:attribute name="title1" label="Title Tile 1" description="Text of the title you want to show"/>
+    <design:attribute name="color1" label="Color Tile 1" description="Color of the title you want to show"/>
+    
+    <design:attribute name="image2" label="Image Tile 2" description="URL of the image you want to display"/>
+    <design:attribute name="url2" label="URL Tile 2" description="URL to which you will be redirected when you press the image"/>
+    <design:attribute name="title2" label="Title Tile 2" description="Text of the title you want to show"/>
+    <design:attribute name="color2" label="Color Tile 2" description="Color of the title you want to show"/>
+    
+    <design:attribute name="image3" label="Image Tile 3" description="URL of the image you want to display"/>
+    <design:attribute name="url3" label="URL Tile 3" description="URL to which you will be redirected when you press the image"/>
+    <design:attribute name="title3" label="Title Tile 3" description="Text of the title you want to show"/>
+    <design:attribute name="color3" label="Color Tile 3" description="Color of the title you want to show"/>
+	
+</design:component>

@@ -1,0 +1,106 @@
+<!--
+ - Created by carlos.bastidas on 7/3/2019.
+ -->
+
+<aura:component description="CNT_LCMP019_NewAccountB2B">
+
+    <aura:attribute name="accountRecord" type="Account"
+                    default="{ 'Name':'' , 'ImpositiveCondition__c':'' , 'PrimaryEmail__c':'', 'MainPhone__c':'', 'CNT_Legal_Type__c':'', 'Address__c':'', 'Country__c':'CHILE', 'PersonType__c':'J'}"/>
+
+    <aura:method name="getFormValues" action="{!c.onGetFormValues}" access="public"/>
+    <aura:attribute name="recordTypeId" type="String" default="0121o000000oSi6AAE"/>
+   
+      <!--error1 Invalid account name -->
+    <aura:attribute name="error1" type="Boolean"/>
+      <!-- error2 Invalid phone number-->
+    <aura:attribute name="error6" type="Boolean"/>
+     <!-- error2 Invalid phone number-->
+    <aura:attribute name="errorAcc1" type="Boolean"/>
+    
+    
+    <!--error message Invalid account name format-->
+    <aura:if isTrue="{!v.error1}">
+        <div class="slds-notify_container slds-is-relative">
+            <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                <span class="slds-assistive-text">error1</span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small ">Ingresar un valor válido para el Nombre de la cuenta. Debe contener de 1 a 3 caracteres</h2>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <!-- error message Invalid phone number format-->
+    <aura:if isTrue="{!v.errorAcc1}">
+        <div class="slds-notify_container slds-is-relative">
+            <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                <span class="slds-assistive-text">errorAcc1</span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small ">Ingresar Teléfono Válido. Debe contener 9 dígitos numéricos. Para Celulares: 9XXXXXXXX. Para Red fija: 52XXXXXXX</h2>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    
+     <!--error message invalid Identity Number format--> 
+    <aura:if isTrue="{!v.error6}">
+        <div class="slds-notify_container slds-is-relative">
+            <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                <span class="slds-assistive-text">error6</span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small ">Ingresar un Número de Identidad válido. Sin puntos y con guión.</h2>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <lightning:recordEditForm aura:id="recordForm"
+                              objectApiName="Account"
+                              onsubmit="{ !c.save }"
+                              recordTypeId="{!v.recordTypeId}">
+
+        <div class="slds-grid slds-wrap slds-gutters slds-gutters_x-small slds-grid_pull-padded-x-small componentReferenceExamples">
+            <div class="example-box-container slds-col slds-size_1-of-1 slds-medium-size_1-of-1">
+                <div class="slds-box example-box">
+                    <div class="c-container">
+
+                        <lightning:layoutItem size="12">
+                            <lightning:messages/>
+                        </lightning:layoutItem>
+
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element" fieldName="Name" aura:id="Name" required="true"/>
+                            </lightning:layoutItem>
+                        
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element"
+                                                      fieldName="IdentityNumber__c" aura:id="IdentityNumber__c" required="true"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element"
+                                                      fieldName="PrimaryEmail__c" aura:id="PrimaryEmail__c" required="true"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element"
+                                                      fieldName="MainPhone__c" aura:id="MainPhone__c" required="true"/>
+                            </lightning:layoutItem>
+                            
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element"
+                                                      fieldName="CNT_Legal_Type__c" aura:id="CNT_Legal_Type__c" required="true"/>
+
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="6">
+                                <lightning:inputField class="slds-form-element"
+                                                      fieldName="Address__c" aura:id="Address__c" required="true"/>
+
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </lightning:recordEditForm>
+</aura:component>

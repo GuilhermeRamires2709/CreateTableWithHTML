@@ -1,0 +1,132 @@
+<!--
+  @description       : 
+  @author            : jefferson.rocha@engdb.com.br
+  @group             : 
+  @last modified on  : 01-26-2022
+  @last modified by  : jefferson.rocha@engdb.com.br 
+  Modifications Log
+  Ver   Date         Author                         Modification
+  1.0   01-26-2022   jefferson.rocha@engdb.com.br   Initial Version
+-->
+<template>
+
+    <div style="background-color:white">
+        <br/>
+        <div style="text-align: center;">
+            <span style="text-align:center;font-size: 25px;"><b>Termos para consentimento</b></span>
+        </div>
+        <hr style="background-color: gray;">
+        <b>&nbsp;&nbsp;O cliente concorda que a Enel utilize os dados pessoais para fins de marketing</b>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="4" padding="around-small">
+                <input type="checkbox" name="yesMkt" id="yesMkt"  data-id="yesMkt" onclick={setyesMkt}>&nbsp;&nbsp;Sim
+            </lightning-layout-item>
+            <lightning-layout-item size="4" padding="around-small">
+                <input type="checkbox" name="noMkt" id="noMkt"  data-id="noMkt" onclick={setnoMkt}>&nbsp;&nbsp;Não
+            </lightning-layout-item>
+            <lightning-layout-item size="4" padding="around-small">
+                <input type="checkbox" name="noNowMkt" id="noNowMkt"  data-id="noNowMkt" onclick={setnoNowMkt}>&nbsp;&nbsp;Não desejo responder agora
+            </lightning-layout-item>
+        </lightning-layout>
+        <hr style="background-color: gray;">
+        <b>&nbsp;&nbsp;O cliente concorda que a Enel compartilhe os dados pessoais com outras empresas do grupo Enel e com terceiros para fins de marketing</b>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="4" padding="around-small">
+                <input type="checkbox" name="yesSharedMkt" id="yesSharedMkt"  data-id="yesSharedMkt" onclick={setyesSharedMkt}>&nbsp;&nbsp;Sim
+            </lightning-layout-item>
+            <lightning-layout-item size="4" padding="around-small">
+                <input type="checkbox" name="noSharedMkt" id="noSharedMkt"  data-id="noSharedMkt" onclick={setnoSharedMkt}>&nbsp;&nbsp;Não
+            </lightning-layout-item>
+            <lightning-layout-item size="4" padding="around-small">
+                <input type="checkbox" name="noNowSharedMkt" id="noNowSharedMkt"  data-id="noNowSharedMkt" onclick={setnoNowSharedMkt}>&nbsp;&nbsp;Não desejo responder agora
+            </lightning-layout-item>
+        </lightning-layout>
+        <hr style="background-color: gray;">
+        <b>&nbsp;&nbsp;Não autorizo o recebimento de:</b>
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="noComunications" id="noComunications"  data-id="noComunications" onclick={setnoComunications}>&nbsp;&nbsp;Comunicações
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="noMaintenanceNotices" id="noMaintenanceNotices"  data-id="noMaintenanceNotices" onclick={setnoMaintenanceNotices}>&nbsp;&nbsp;Recebimento de avisos de programação para manutenção na rede
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="noSafetyTips" id="noSafetyTips"  data-id="noSafetyTips" onclick={setnoSafetyTips}>&nbsp;&nbsp;Recebimento de inormações sobre dicas de segurança
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="noSavingTips" id="noSavingTips"  data-id="noSavingTips" onclick={setnoSavingTips}>&nbsp;&nbsp;Recebimento de inormações sobre dicas de economia
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="noElectricitySector" id="noElectricitySector"  data-id="noElectricitySector" onclick={setnoElectricitySector}>&nbsp;&nbsp;Informações sobre o setor elétrico
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="noInstitutionalNewsletter" id="noInstitutionalNewsletter"  data-id="noInstitutionalNewsletter" onclick={setnoInstitutionalNewsletter}>&nbsp;&nbsp;Informativo institucionais e orientações sobre serviços disponibilizados pela Enel
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="noDebitNotices" id="noDebitNotices"  data-id="noDebitNotices" onclick={setnoDebitNotices}>&nbsp;&nbsp;Recebimento de avisos de débito
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="noCampaignNotices" id="noCampaignNotices"  data-id="noCampaignNotices" onclick={setnoCampaignNotices}>&nbsp;&nbsp;Recebimento de avisos de campanhas
+        <hr style="background-color: gray;">
+        <lightning-layout multiple-rows style="text-align:center;">
+            <lightning-layout-item size="12" padding="around-small">
+
+                <!-- <lightning-button variant="brand-outline" label="Atualizar" title="Atualizar informações LGPD" onclick={saveLgpdInformationsJs} class="slds-m-left_x-small"></lightning-button> -->
+
+
+                <lightning-button variant="brand-outline" label="Imprimir" title="Imprimir termo de exclusão" onclick={printer} class="slds-m-left_x-small"></lightning-button>
+
+                <lightning-button variant="brand-outline" label="Finalizar Email" onclick={sendEmail} class="slds-m-left_x-small"></lightning-button>					
+
+            </lightning-layout-item>            
+        </lightning-layout>        
+        <br>
+    </div>
+
+    <template if:true={showPopup}>
+        <section
+        role="dialog"
+        tabindex="-1"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+        aria-describedby="modal-content-id-1"
+        class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <!-- modal header start -->
+          <header class="slds-modal__header">
+            <button
+              class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse slds-hide"
+              title="Close"
+              onclick={closeEditModal}>
+              <lightning-icon
+                icon-name="utility:close"
+                alternative-text="close"
+                variant="inverse"
+                size="small"></lightning-icon>
+              <span class="slds-assistive-text">Fechar</span>
+            </button>
+            <h2
+              id="modal-heading-01"
+              class="slds-text-heading_medium slds-hyphenate">
+              Mantenha o cadastro atualizado!
+            </h2>
+          </header>
+          <!-- modal body start -->
+          <div
+            class="slds-modal__content slds-p-around_small"
+            id="modal-content-id-1"
+            style="overflow: initial; padding-bottom: 0px">
+            É muito importante que o cadastro LGPD fique atualizado. Deseja atualizar agora.
+          </div>
+          <footer class="slds-modal__footer">
+            <button
+              class="slds-button slds-button_neutral"
+              onclick={closeEditModal}
+              title="Cancelar">
+              Sim
+            </button>            
+            <button
+              class="slds-button slds-button_neutral"
+              onclick={closeEditModal}
+              title="Cancelar">
+              Não
+            </button>
+          </footer>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+</template>

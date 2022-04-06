@@ -1,0 +1,5 @@
+<design:component label="Image">
+    <!-- General Attributes -->
+    <design:attribute name="image" label="Image" description="URL of the image you want to display"/>
+    
+</design:component>

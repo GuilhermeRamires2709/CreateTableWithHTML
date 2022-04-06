@@ -1,0 +1,11 @@
+<design:component label="Banner">
+    
+    <!-- General Attributes -->
+    <design:attribute name="image" label="Image" description="URL of the image you want to display"/>
+    <design:attribute name="height" label="Height (px)" description="Height of the image you want to display"/>
+    <design:attribute name="background" label="Background Color" description="Background Color you want to display"/>
+    <design:attribute name="text" label="Title" description="Text of the title you want to display"/>
+    <design:attribute name="textSize" label="Title Size" description="Size of the title you want to display"/>
+    <design:attribute name="textColor" label="Title Color" description="Color of the title you want to display"/>
+    
+</design:component>

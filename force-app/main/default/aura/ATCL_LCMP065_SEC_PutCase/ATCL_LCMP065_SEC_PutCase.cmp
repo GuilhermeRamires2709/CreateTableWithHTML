@@ -1,0 +1,27 @@
+<!--
+  @File Name          : ATCL_LCMP065_SEC_PutCase.cmp
+  @Description        : 
+  @Author             : ajimenez@deloitte.es
+  @Group              : 
+  @Last Modified By   : ajimenez@deloitte.es
+  @Last Modified On   : 19/12/2019 18:28:08
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    19/12/2019   ajimenez@deloitte.es     Initial Version
+-->
+<aura:component controller = "ATCL_LVFC100_SEC_PutCase" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global" >
+	<!-- attributes -->
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="spinnerControl" type="Boolean" default="true"/>
+    <aura:attribute name="targetPageReference"  type="Object"   default=""  required="true" />
+
+
+    <!-- HANDLER -->
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    
+    <aura:if isTrue="{!v.spinnerControl}" >
+        <div aura:id="masterSpinner">
+            <lightning:spinner aura:id="mySpinner"/>
+        </div>
+    </aura:if>
+</aura:component>

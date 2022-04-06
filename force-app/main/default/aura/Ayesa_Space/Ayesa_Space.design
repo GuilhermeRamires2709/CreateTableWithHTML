@@ -1,0 +1,6 @@
+<design:component label="Space">
+	
+    <design:attribute name="height" label="Height (px)" description="Height of the image you want to display"/>
+    <design:attribute name="background" label="Background Color" description="Background Color you want to display"/>
+    
+</design:component>

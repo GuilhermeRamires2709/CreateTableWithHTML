@@ -1,0 +1,182 @@
+<template>
+    <div style="background-color:white;">
+        <h1 style="font-size: 35px; text-align: center; font-style: bold;">Geração de relatório</h1>
+        <hr/>
+        <p style="font-size: 18px; text-align: left; margin-left: 10px;">Escolha abaixo quais dados deseja que constem em seu relatório</p>
+        <p style="font-size: 12px; text-align: left; margin-left: 10px;"><input type="checkbox" name="selectAllFields" id="selectAllFields" data-id="selectAllFields" onchange={selectAllFields}>&nbsp;&nbsp;Selecionar todos os campos</p>
+        <div style="display:inline-block; justify-content:space-between; align-items:center;">
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="8" small-device-size="8">
+                    <h2 style="font-size:25px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style:bold; margin-left:5px;">Dados do contrato</h2>
+                </lightning-layout-item>
+            </lightning-layout>
+            <lightning-layout-item size="4" small-device-size="4" padding="around-small">
+                <lightning-button label={clickedButtonContractData} onclick={clickshowContractData} style="color:crimson;"></lightning-button>                            
+            </lightning-layout-item>
+        </div>  
+  
+        <template if:true={boolVisibleContractData}>
+            <p style="font-size: 12px; text-align: left; margin-left: 10px;"><input type="checkbox" name="selectAllContractData" id="selectAllContractData" data-id="selectAll" onchange={selectAllContractData}>&nbsp;&nbsp;Selecionar todos os dados deste seção</p>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="6" padding="around-small">
+                    <p><input type="checkbox" name="ContractData" id="nameClient" data-id="selectAll" onclick={setnameClient}>&nbsp;&nbsp;Nome do cliente</p>
+                    <p><input type="checkbox" name="ContractData" id="addressClient" data-id="selectAll" onclick={setaddressClient}>&nbsp;&nbsp;Endereço</p>
+                    <p><input type="checkbox" name="ContractData" id="identificationNumber" data-id="selectAll" onclick={setidentificationNumber}>&nbsp;&nbsp;CPF/CNPJ</p>
+                    <p><input type="checkbox" name="ContractData" id="docType" data-id="selectAll" onclick={setdocType}>&nbsp;&nbsp;Tipo do Documento</p>
+                    <p><input type="checkbox" name="ContractData" id="docNumber" data-id="selectAll" onclick={setdocNumber}>&nbsp;&nbsp;Número do documento</p>
+                    <p><input type="checkbox" name="ContractData" id="motherName" data-id="selectAll" onclick={setmotherName}>&nbsp;&nbsp;Nome da mãe</p>
+                    <p><input type="checkbox" name="ContractData" id="bornDate" data-id="selectAll" onclick={setbornDate}>&nbsp;&nbsp;Data de Nascimento</p>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" padding="around-small">
+                    <p><input type="checkbox" name="ContractData" id="attorney" data-id="selectAll" onclick={setattorney}>&nbsp;&nbsp;Procurador</p>
+                    <p><input type="checkbox" name="ContractData" id="attorneyCpf" data-id="selectAll" onclick={setattorneyCpf}>&nbsp;&nbsp;CPF do Procurador</p>
+                    <p><input type="checkbox" name="ContractData" id="partnerName" data-id="selectAll" onclick={setpartnerName}>&nbsp;&nbsp;Nome do sócio</p>
+                    <p><input type="checkbox" name="ContractData" id="partnerCpf" data-id="selectAll" onclick={setpartnerCpf}>&nbsp;&nbsp;CPF do Sócio</p>
+                    <p><input type="checkbox" name="ContractData" id="spouseName" data-id="selectAll" onclick={setspouseName}>&nbsp;&nbsp;Nome do cônjuge</p>
+                    <p><input type="checkbox" name="ContractData" id="spouseCpf" data-id="selectAll" onclick={setspouseCpf}>&nbsp;&nbsp;CPF do cônjuge</p>
+                </lightning-layout-item>
+            </lightning-layout>  
+              
+        </template> 
+        
+        <hr/>
+        <div>
+            <h2 style="font-size:25px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style:bold; margin: left 5px;">Dados do Imóvel</h2>
+            <lightning-button label={clickButtonPropertyData} onclick={clickedShowPropertyData} class="slds-m-left_x-small" style="color:crimson;"></lightning-button>
+        </div>
+        <template if:true={boolVisiblePropertyData}>
+        <p style="font-size: 12px; text-align: left; margin-left: 10px;"><input type="checkbox" name="selectAll" id="selectAllPropertyData" data-id="selectAll" onchange={selectAllPropertyData}>&nbsp;&nbsp;Selecionar todos os dados deste seção</p>
+        <lightning-layout>
+            <lightning-layout-item size="6" padding="around-small">
+                <p><input type="checkbox" name="propertyData" id="clientNumber" data-id="selectAll" onclick={setclientNumber}>&nbsp;&nbsp;Número do cliente</p>
+                <p><input type="checkbox" name="propertyData" id="refPoint" data-id="selectAll" onclick={setrefPoint}>&nbsp;&nbsp;Ponto de referência</p>
+                <p><input type="checkbox" name="propertyData" id="postCode" data-id="selectAll" onclick={setpostCode}>&nbsp;&nbsp;CEP</p>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" padding="around-small">
+                <p><input type="checkbox" name="propertyData" id="clientType" data-id="selectAll" onclick={setclientType}>&nbsp;&nbsp;Classificação do tipo de cliente</p>
+                <p><input type="checkbox" name="propertyData" id="cnae" data-id="selectAll" onclick={setcnae}>&nbsp;&nbsp;CNAE</p>
+                <p><input type="checkbox" name="propertyData" id="ruralInscription" data-id="selectAll" onclick={setruralInscription}>&nbsp;&nbsp;Inscrição Rural</p>
+            </lightning-layout-item>
+        </lightning-layout>
+        </template>
+        <hr/>
+        <div>
+            <h2 style="font-size:25px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style:bold; margin-left:5px;">Dados de Contato</h2>
+            <lightning-button label={clickedButtonContactData} onclick={clickshowContactData} class="slds-m-left_x-small" style="color:crimson;"></lightning-button>
+        </div>
+        <template if:true={boolVisibleContactData}>
+        <p style="font-size: 12px; text-align: left; margin-left: 10px;"><input type="checkbox" name="selectAllContactData" id="selectAllContactData" data-id="selectAll" onchange={selectAllContactData}>&nbsp;&nbsp;Selecionar todos os dados deste seção</p>
+        <lightning-layout>
+            <lightning-layout-item size="6" padding="around-small">
+                <p><input type="checkbox" name="contactData" id="phone1" data-id="selectAll" onclick={setphone1}>&nbsp;&nbsp;Telefone 1</p>
+                <p><input type="checkbox" name="contactData" id="phone2" data-id="selectAll" onclick={setphone2}>&nbsp;&nbsp;Telefone 2</p>
+                <p><input type="checkbox" name="contactData" id="phone3" data-id="selectAll" onclick={setphone3}>&nbsp;&nbsp;Telefone 3</p>
+                <p><input type="checkbox" name="contactData" id="phone4" data-id="selectAll" onclick={setphone4}>&nbsp;&nbsp;Telefone 4</p>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" padding="around-small">
+                <p><input type="checkbox" name="contactData" id="phone5" data-id="selectAll" onclick={setphone5}>&nbsp;&nbsp;Telefone 5</p>
+                <p><input type="checkbox" name="contactData" id="accessMail" data-id="selectAll" onclick={setaccessMail}>&nbsp;&nbsp;Email de acesso à agência virtual</p>
+                <p><input type="checkbox" name="contactData" id="alternativeMail" data-id="selectAll" onclick={setalternativeMail}>&nbsp;&nbsp;Email alternativo</p>     
+            </lightning-layout-item>
+        </lightning-layout>
+        </template>
+        <hr/>
+        <div>
+            <h2 style="font-size:25px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style:bold; margin-left:5px;">Dados Bancários</h2>
+            <lightning-button label={clickedButtonBankData} onclick={clickShowBankData} class="slds-m-left_x-small" style="color:crimson;"></lightning-button>
+        </div>
+        <template if:true={boolVisibleBankData}>
+            <p style="font-size: 12px; text-align: left; margin-left: 10px;"><input type="checkbox" name="selectAllBankData" id="selectAllBankData" data-id="selectAll" onchange={selectAllBankData}>&nbsp;&nbsp;Selecionar todos os dados deste seção</p>
+            <lightning-layout>
+                <lightning-layout-item size="6" padding="around-small">
+                    <p><input type="checkbox" name="bankData" id="bank" data-id="selectAll" onclick={setbank}>&nbsp;&nbsp;Banco</p>
+                    <p><input type="checkbox" name="bankData" id="agency" data-id="selectAll" onclick={setagency}>&nbsp;&nbsp;Agência</p>
+                    <p><input type="checkbox" name="bankData" id="account" data-id="selectAll" onclick={setaccount}>&nbsp;&nbsp;Conta</p>
+                </lightning-layout-item>
+            </lightning-layout>
+        </template>
+        <hr/>
+        <div>
+            <h2 style="font-size:25px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style:bold; margin-left:5px;">Dados Endereço de Cobrança</h2>
+            <lightning-button label={clickedBillingAddressData} onclick={clickShowBillingData} class="slds-m-left_x-small" style="color:crimson;"></lightning-button>
+        </div>
+        <template if:true={boolVisibleBillingAdress}>
+            <p style="font-size: 12px; text-align: left; margin-left: 10px;"><input type="checkbox" name="selectAllBillingAddress" id="selectAllBillingAddress" data-id="selectAll" onchange={selectAllBillingAddress}>&nbsp;&nbsp;Selecionar todos os dados deste seção</p>
+            <lightning-layout>
+                <lightning-layout-item size="6" padding="around-small">
+                    <p><input type="checkbox" name="billingAddressData" id="postCodeCharge" data-id="selectAll" onclick={setpostCodeCharge}>&nbsp;&nbsp;CEP</p>
+                    <p><input type="checkbox" name="billingAddressData" id="publicPlace" data-id="selectAll" onclick={setpublicPlace}>&nbsp;&nbsp;Logradouro</p>
+                    <p><input type="checkbox" name="billingAddressData" id="addressNumber" data-id="selectAll" onclick={setaddressNumber}>&nbsp;&nbsp;Número</p>
+                    <p><input type="checkbox" name="billingAddressData" id="addressDetails" data-id="selectAll" onclick={setaddressDetails}>&nbsp;&nbsp;Complemento</p>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" padding="around-small">
+                    <p><input type="checkbox" name="billingAddressData" id="district" data-id="selectAll" onclick={setdistrict}>&nbsp;&nbsp;Bairro</p>
+                    <p><input type="checkbox" name="billingAddressData" id="state" data-id="selectAll" onclick={setstate}>&nbsp;&nbsp;UF</p>
+                    <p><input type="checkbox" name="billingAddressData" id="city" data-id="selectAll" onclick={setcity}>&nbsp;&nbsp;Município</p>                                    
+                </lightning-layout-item>
+            </lightning-layout>
+        </template>
+        <hr/>
+        <div>
+            <h2 style="font-size:25px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style:bold; margin-left:5px;">Dados Conta por e-mail</h2>
+            <lightning-button label={clickedMailAccountData} onclick={clickShowMailAccountData} class="slds-m-left_x-small" style="color:crimson;"></lightning-button>
+        </div>
+        <template if:true={boolVisibleMailAccountData}>
+            <lightning-layout>
+                <lightning-layout-item size="6" padding="around-small">
+                    <p><input type="checkbox" name="dataForMail" id="dataForMail" data-id="selectAll" onclick={setdataForMail}>&nbsp;&nbsp;Dados Conta por E-mail</p>
+                </lightning-layout-item>
+            </lightning-layout>
+        </template>
+        <hr/>
+        <div>
+            <h2 style="font-size:25px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style:bold; margin-left:5px;">Dados Benefício Social</h2>
+            <lightning-button label={clickedSocialBenefitData} onclick={clickShowSocialBenefit} class="slds-m-left_x-small" style="color:crimson;"></lightning-button>
+        </div>
+        <template if:true={boolVisibleSocialBenefitData}>
+            <lightning-layout>
+                <lightning-layout-item size="6" padding="around-small">
+                    <p><input type="checkbox" name="socialBenefitData" id="essentialService" data-id="selectAll" onclick={setessentialService}>&nbsp;&nbsp; Classificação Serviço Essêncial</p>
+                    <p><input type="checkbox" name="socialBenefitData" id="beneficiaryData" data-id="selectAll" onclick={setbeneficiaryData}>&nbsp;&nbsp; Dados Beneficiário</p>
+                    <p><input type="checkbox" name="socialBenefitData" id="nis" data-id="selectAll" onclick={setnis}>&nbsp;&nbsp; NIS</p>
+                    <p><input type="checkbox" name="socialBenefitData" id="rani" data-id="selectAll" onclick={setrani}>&nbsp;&nbsp; RANI </p>    
+                </lightning-layout-item>
+                <lightning-layout-item size="6" padding="around-small">
+                    <p><input type="checkbox" name="socialBenefitData" id="familyIncome" data-id="selectAll" onclick={setfamilyIncome}>&nbsp;&nbsp; Renda Familiar</p>
+                    <p><input type="checkbox" name="socialBenefitData" id="breed" data-id="selectAll" onclick={setbreed}>&nbsp;&nbsp; Origem étnica ou racial</p>
+                    <p><input type="checkbox" name="socialBenefitData" id="residentsNumber" data-id="selectAll" onclick={setresidentsNumber}>&nbsp;&nbsp; Número de pessoas no domicílio</p>
+                </lightning-layout-item>    
+            </lightning-layout>
+        </template>
+        <hr/>
+        <div>
+            <h2 style="font-size:25px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style:bold; margin-left:5px;">Dados Cliente Vital</h2>
+            <lightning-button label={clickedClientData} onclick={clickShowClientData} style="color:crimson;"></lightning-button>
+        </div>
+        <template if:true={boolVisibleClientData}>
+            <lightning-layout>
+            <lightning-layout-item size="6" padding="around-small">
+                <p><input type="checkbox" name="medicalCertificate" id="medicalCertificate" data-id="selectAll" onclick={setmedicalCertificate}>&nbsp;&nbsp;Atestado médico</p>
+            </lightning-layout-item>
+            </lightning-layout>
+        </template>
+        <hr/>
+        <p style="font-size: 15px; text-align: left; margin-left: 10px;">Selecione a forma de envio do relatório</p>
+        <lightning-layout>
+            <lightning-layout-item size="6" padding="around-small">
+                <p><input style="border-color:black; border-style: solid; border-radius: 50%; border-width: 1px;" type="checkbox" name="downloadterm" id="downloadterm" data-id="downloadterm" onclick={setdownloadterm}>&nbsp;&nbsp;Baixar o termo</p>
+                <p><input style="border-radius: 12px" type="checkbox" name="sendMail" id="sendMail" data-id="sendMail" onclick={setsendMail}>&nbsp;&nbsp;Enviar por e-mail</p>
+            </lightning-layout-item>
+            </lightning-layout>
+            <div style="background-color:#E5E4E2; align-items: center; padding:15px;">
+            <h2 style="font-size:20px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial,  sans-serif; text-align:center; font-style:bold; margin-left:30px;">E-mail</h2>
+                <lightning-input type="text" placeholder="Digite aqui o seu e-mail..."></lightning-input>
+                <p style="font-size: 14px; text-align: center; color:dimgrey; margin-top: -5px;"><br >Este e-mail selecionado será usado exclusivamente para envio <br/>deste relatório e não será adicionado ao seu cadastro.</br></p>
+            </div>  
+            <div style = "align-items:center; justify-content:space-between;">
+            <lightning-button label="Confirmar"  onclick={handleClick} style="background-color:crimson; color:whitesmoke;"></lightning-button>
+            <lightning-button label="Cancelar"  onclick={handleClick} style="background-color:white; color:black; border:1px; border-color:black; border-style:solid;"></lightning-button>
+            </div>   
+            <lightning-button label="Create PDF"  onclick={printer}></lightning-button>
+        </div>
+</template>

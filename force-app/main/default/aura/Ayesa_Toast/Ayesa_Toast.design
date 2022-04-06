@@ -1,0 +1,7 @@
+<design:component label="Toast">
+    <design:attribute name="text" label="Title" description="Text of the title you want to display"/>
+    <design:attribute name="textBody" label="Text" description="Text of the body you want to display"/>
+    <design:attribute name="textAlign" label="Align" description="Alignment text of the body" datasource="Left,Right,Center"/>
+    <design:attribute name="textColor" label="Title Color" description="Color of the title you want to display"/>
+    <design:attribute name="background" label="Background Color" description="Background Color you want to display"/>
+</design:component>

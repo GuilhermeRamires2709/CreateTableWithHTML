@@ -1,0 +1,393 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,forceCommunity:availableForAllPageTypes" controller="CNT_BoletaFacturaModalController" access="global">
+   
+   <aura:html tag="style">
+        .cuf-content {
+            padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+            padding: 0rem !important;
+        }       
+        .slds-modal__content{
+            height:unset !important;
+            max-height:unset !important;
+        }
+    </aura:html>
+
+    <aura:attribute name="selectRecordType" type="boolean" default="true"/>
+	<aura:attribute name="openBoletaForm" type="boolean" default="false"/>
+	<aura:attribute name="openFacturaForm" type="boolean" default="false"/>
+	<aura:attribute name="value" type="String" default=""/>
+	<aura:attribute name="newInvoice" type="Invoice__c" default="{ 'sobjectType': 'Invoice__c'}"/>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:attribute name="oficinaOptions" type="Map"/>
+	<aura:attribute name="bookCodeOptions" type="Map"/>
+	<aura:attribute name="muniOptions" type="Map"/>
+	<aura:attribute name="cityOptions" type="Map"/>
+	<aura:attribute name="sectorOptions" type="Map"/>
+	<aura:attribute name="paymentTypeOptions" type="Map"/>
+	<aura:attribute name="paymentMethodOptions" type="Map"/>
+	<aura:attribute name="productOptions" type="List"/>
+	<aura:attribute name="podName" type="String"/>
+	<aura:attribute name="muniName" type="String"/>
+    
+    <!-- Custom Dependent Picklist 25-01-2021 -->
+    
+    <aura:attribute name="listControllingValues" type="Map" description="to store controller field values"/>
+    <aura:attribute name="listDependingValues" type="Map" description="to store dependent field values"/>
+    <aura:attribute name="depnedentFieldMap" type="map" description="map to store dependent values with controlling value"/>
+    <aura:attribute name="bDisabledDependentFld" type="boolean" default="true"/> 
+    
+    <aura:attribute name="objDetail" type="Invoice__c" default="{'sobjectType' : 'Invoice__c'}"/>
+    <aura:attribute name="controllingFieldAPI" type="string" default="Payment_Type__c" description="store field API name of Controller field"/>
+    <aura:attribute name="dependingFieldAPI" type="string" default="Payment_Method__c" description="store field API name of dependent field"/>
+     
+    <!-- -->
+   
+	<aura:attribute name="options" type="List" default="[
+    {'label': 'Boleta', 'value': 'Boleta'},
+    {'label': 'Factura', 'value': 'Factura'}
+    ]"/>
+
+	<aura:if isTrue="{!v.selectRecordType}">
+		<div class="slds-container">
+			<header class="slds-modal__header">
+				<lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.cancelCloseHandler }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+				<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Boleta/Factura</h2>
+			</header>
+			<div class="slds-modal__content slds-p-around_medium ">
+				<p>Seleccione el tipo de documento que necesite</p>
+				<lightning:radioGroup name="radioGroupRequired"
+                          label=""
+                          options="{! v.options }"
+                          value="{! v.value }"
+                          onchange="{! c.handleChange }"
+                          type="radio"
+                          />
+			</div>
+			<footer class="slds-modal__footer slds-p-around_large" style="bottom: -80px;">
+				<lightning:button variant="neutral"
+                                          label="Cancelar"
+                                          title="Cancelar"
+                                          onclick="{! c.cancelCloseHandler}"/>
+				<lightning:button variant="brand"
+                                          label="Siguiente"
+                                          title="Siguiente"
+                                          onclick="{!c.nextStepHandler}"/>
+			</footer>
+		</div>
+   </aura:if>
+   
+	<aura:if isTrue="{!v.openFacturaForm}">
+         <div class="slds-container">
+			<header class="slds-modal__header">
+				<lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.cancelCloseHandler }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+				<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Factura</h2>
+			</header>
+			<div class="slds-modal__content slds-p-around_medium ">
+				<div class="slds-grid slds-wrap">
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" >
+						<lightning:select aura:id="field" required="true" name="oficinaFactura" label="Oficina" value="{!v.newInvoice.Office__c}">
+							<option value="">--None--</option>
+							<aura:iteration items="{!v.oficinaOptions}" var="item" indexVar="key">
+								<option text="{!item.value}" value="{!item.key}" selected="{!item.key==v.newInvoice.Office__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="codigolibroFactura" label="Código de libro" value="{!v.newInvoice.Book_Code__c}">
+							<option value="">--None--</option>
+							<aura:iteration items="{!v.bookCodeOptions}" var="item" indexVar="key">
+								<option text="{!item.value}" value="{!item.key}" selected="{!item.key==v.newInvoice.Book_Code__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input name="tipoDocumentoFactura" label="Tipo de Documento" value="{!v.newInvoice.DocumentType__c}" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="fechaEmisiónFactura" label="Fecha de Emisión" value="{!v.newInvoice.EmissionDate__c}" type="date"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="fechaVencimientoFactura" label="Fecha de Vencimiento" value="{!v.newInvoice.ExpirationDate__c}" type="date"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input aura:id="field" required="true" name="nSuministroFactura" label="Nº Suministro" value="{!v.podName}" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="rutFactura" label="RUT" value="{!v.newInvoice.RUT__c}"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input name="guiaDespachoFactura" label="Guía Despacho" value="{!v.newInvoice.Office_Guide__c}" maxlength="100"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="razonSocialFactura" label="Razón Social" value="{!v.newInvoice.Business_Name__c}" maxlength="100" />
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="domicilioFactura" label="Domicilio" value="{!v.newInvoice.Complete_Address__c}" maxlength="150" />
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="comunaFactura" label="Comuna" value="{!v.newInvoice.Municipality__c}">
+							<option value="">--None--</option>
+							<aura:iteration items="{!v.muniOptions}" var="item" indexVar="key">
+								<option text="{!item.value}" value="{!item.key}" selected="{!item.key==v.newInvoice.Municipality__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="ciudadFactura" label="Ciudad" value="{!v.newInvoice.City__c}">
+							<option value="">--None--</option>
+							<aura:iteration items="{!v.cityOptions}" var="item" indexVar="key">
+								<option text="{!item.value}" value="{!item.key}" selected="{!item.key==v.newInvoice.City__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="giroFactura" label="Giro" value="{!v.newInvoice.Sector__c}" />
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="tipoPagoFactura" label="Tipo de Pago" onchange="{!c.onControllerFieldChange}" value="{!v.newInvoice.Payment_Type__c}">
+                            <aura:iteration items="{!v.listControllingValues}" var="item" indexVar="key">
+								<option text="{!item.value}" value="{!item.key}" selected="{!item==v.newInvoice.Payment_Type__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="formaPagoFactura" label="Forma de Pago" value="{!v.newInvoice.Payment_Method__c}" disabled="{!v.bDisabledDependentFld}">							
+                            <aura:iteration items="{!v.listDependingValues}" var="item" indexVar="key">
+								<option text="{!item.value}" value="{!item.key}" selected="{!item==v.newInvoice.Payment_Method__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input name="estadoDocumentoFactura" label="Estado Documento" value="{!v.newInvoice.Status_Document__c}" maxlength="150"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input aura:id="field" required="true" name="numeroPedidoFactura" label="Número de Pedido" value="{!v.newInvoice.Sales_Number__c}"  class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input name="nContratoFactura" label="Nº Contrato" value="{!v.newInvoice.Contract_Number__c}" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input name="telefonoFactura" label="Teléfono" value="{!v.newInvoice.Phone__c}" type="tel"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="oc" name="ocFactura" label="OC" value="{!v.newInvoice.OC__c}" maxlength="100" />
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="hes" name="ocFactura" label="HES" value="{!v.newInvoice.HES__c}" maxlength="100" />
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="productosFactura" label="Producto" value="{!v.newInvoice.Product__c}" onchange="{!c.onChangeProduct}">
+							<option value="">--None--</option>
+							<aura:iteration items="{!v.productOptions}" var="item" indexVar="key">
+								<option text="{!item}" value="{!item}" selected="{!item==v.newInvoice.Product__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input name="descripcionFactura" label="Descripción" value="{!v.newInvoice.Description_Product__c}" />
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input aura:id="field" required="true" name="codigoProductoFactura" label="Código de Producto" value="{!v.newInvoice.Product_Code__c}" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" >
+						<p class="disabledValue">AF</p>
+						<div style="vertical-align:middle;margin:10px 0px;">
+							<ui:outputCheckbox value="{!v.newInvoice.AF__c}"/>
+						</div>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="cecoFactura" label="CECO" value="{!v.newInvoice.CECO__c}" maxlength="150"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input name="ordenInputacionFactura" label="Orden de Imputación" value="{!v.newInvoice.Order_Imputation__c}" required="true"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="precioFactura" label="Precio (SIN IVA)" value="{!v.newInvoice.Amount__c}" onchange="{!c.totatAmountCalc}" maxlength="50" type="number"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="cantidadFactura" class="disabledValue" label="Cantidad" value="{!v.newInvoice.AgreementAmount__c}" type="number"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input name="montoTotalFactura" label="Monto Total" value="{!v.newInvoice.InvoicedAmount__c}" class="disabledValue" type="number"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input aura:id="field" required="true" name="todalNetoFactura" label="Total Neto" value="{!v.newInvoice.TotalBilling__c}" class="disabledValue" />
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input aura:id="field" required="true" name="ivaFactura" label="IVA 19%" value="{!v.newInvoice.Taxes__c}" type="number" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input aura:id="field" required="true" name="totalPagarFactura" label="Total a Pagar" value="{!v.newInvoice.TotalAmountBilled__c}" type="number" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input name="observacionesFactura" label="Observaciones" value="{!v.newInvoice.Observations__c}" maxlength="250" />
+					</div>
+				</div>
+			</div>
+			<footer class="slds-modal__footer slds-p-around_large">
+				<lightning:button variant="neutral"
+                                          label="Cancelar"
+                                          title="Cancelar"
+                                          onclick="{! c.cancelCloseHandler}"/>
+				<lightning:button variant="brand"
+                                          label="Guardar"
+                                          title="Guardar"
+                                          onclick="{!c.saveInvoice}"/>
+         </footer>
+         </div>
+   </aura:if>
+   
+	<aura:if isTrue="{!v.openBoletaForm}">
+		<div class="slds-container">
+			<header class="slds-modal__header">
+				<lightning:buttonIcon iconName="utility:close"
+                                           onclick="{! c.cancelCloseHandler }"
+                                           alternativeText="close"
+                                           variant="bare-inverse"
+                                           class="slds-modal__close"/>
+				<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Boleta</h2>
+			</header>
+			<div class="slds-modal__content slds-p-around_medium ">
+				<div class="slds-grid slds-wrap">
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="oficinaBoleta" label="Oficina" value="{!v.newInvoice.Office__c}">
+							<option value="">--None--</option>
+							<aura:iteration items="{!v.oficinaOptions}" var="item" indexVar="key">
+								<option text="{!item.value}" value="{!item.key}" selected="{!item.key==v.newInvoice.Office__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="codigolibroBoleta" label="Código de libro" value="{!v.newInvoice.Book_Code__c}">
+							<option value="">--None--</option>
+							<aura:iteration items="{!v.bookCodeOptions}" var="item" indexVar="key">
+								<option text="{!item.value}" value="{!item.key}" selected="{!item.key==v.newInvoice.Book_Code__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input name="tipoDocumentoBoleta" label="Tipo de Documento" value="{!v.newInvoice.DocumentType__c}" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="fechaEmisiónBoleta" label="Fecha de Emisión" value="{!v.newInvoice.EmissionDate__c}" type="date"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="fechaVencimientoBoleta" label="Fecha de Vencimiento" value="{!v.newInvoice.ExpirationDate__c}" type="date"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input aura:id="field" required="true" name="nSuministroBoleta" label="Nº Suministro" value="{!v.podName}" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="rutBoleta" label="RUT" value="{!v.newInvoice.RUT__c}"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="razonSocialBoleta" label="Razón Social" value="{!v.newInvoice.Business_Name__c}" maxlength="100" />
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="domicilioBoleta" label="Domicilio" value="{!v.newInvoice.Complete_Address__c}" maxlength="150" />
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="comunaBoleta" label="Comuna" value="{!v.newInvoice.Municipality__c}">
+							<option value="">--None--</option>
+							<aura:iteration items="{!v.muniOptions}" var="item" indexVar="key">
+								<option text="{!item.value}" value="{!item.key}" selected="{!item.key==v.newInvoice.Municipality__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="ciudadBoleta" label="Ciudad" value="{!v.newInvoice.City__c}">
+							<option value="">--None--</option>
+							<aura:iteration items="{!v.cityOptions}" var="item" indexVar="key">
+								<option text="{!item.value}" value="{!item.key}" selected="{!item.key==v.newInvoice.City__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="giroBoleta" label="Giro" value="{!v.newInvoice.Sector__c}"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="formaPagoBoleta" label="Forma de Pago" value="{!v.newInvoice.Payment_Method__c}">
+							<aura:iteration items="{!v.listDependingValues}" var="item" indexVar="key">
+								<option text="{!item.value}" value="{!item.key}" selected="{!item==v.newInvoice.Payment_Method__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>                    
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input name="estadoDocumentoBoleta" label="Estado Documento" value="{!v.newInvoice.Status_Document__c}" maxlength="150"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input aura:id="field" required="true" name="numeroPedidoBoleta" label="Número de Pedido" value="{!v.newInvoice.Sales_Number__c}" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input name="nContratoBoleta" label="Nº Contrato" value="{!v.newInvoice.Contract_Number__c}" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input name="telefonoBoleta" label="Teléfono" value="{!v.newInvoice.Phone__c}" type="tel"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:select aura:id="field" required="true" name="productosBoleta" label="Producto" value="{!v.newInvoice.Product__c}" onchange="{!c.onChangeProduct}">
+							<option value="">--None--</option>
+							<aura:iteration items="{!v.productOptions}" var="item" indexVar="key">
+								<option text="{!item}" value="{!item}" selected="{!item==v.newInvoice.Product__c}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input name="descripcionBoleta" label="Descripción" value="{!v.newInvoice.Description_Product__c}"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input aura:id="field" required="true" name="codigoProductoBoleta" label="Código de Producto" value="{!v.newInvoice.Product_Code__c}" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<p class="disabledValue">AF</p>
+						<div style="vertical-align:middle;margin:10px 0px;">
+							<ui:outputCheckbox value="{!v.newInvoice.AF__c}"/>
+						</div>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="cecoBoleta" label="CECO" value="{!v.newInvoice.CECO__c}" maxlength="150"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input name="ordenInputacionBoleta" label="Orden de Imputación" value="{!v.newInvoice.Order_Imputation__c}" required="true"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="precioBoleta" label="Precio (SIN IVA)" value="{!v.newInvoice.Amount__c}" onchange="{!c.totatAmountCalc}" maxlength="50" type="number"/>
+					</div>
+                    
+
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input aura:id="field" required="true" name="cantidadBoleta" class="disabledValue" label="Cantidad" value="{!v.newInvoice.AgreementAmount__c}" type="number"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input name="montoTotalBoleta" label="Monto Total" value="{!v.newInvoice.InvoicedAmount__c}" class="disabledValue" type="number" onchange="{!c.totatAmountCalc}"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2" style="pointer-events: none">
+						<lightning:input aura:id="field" required="true" name="totalPagarBoleta" label="Total a Pagar" value="{!v.newInvoice.TotalAmountBilled__c}" type="number" class="disabledValue"/>
+					</div>
+					<div class="slds-col--padded slds-size--1-of-1 slds-large-size--1-of-2">
+						<lightning:input name="observacionesBoleta" label="Observaciones" value="{!v.newInvoice.Observations__c}" maxlength="250" />
+					</div>
+				</div>
+			</div>
+			<footer class="slds-modal__footer slds-p-around_large">
+				<lightning:button variant="neutral"
+                                       label="Cancelar"
+                                       title="Cancelar"
+                                       onclick="{! c.cancelCloseHandler}"/>
+				<lightning:button variant="brand"
+                                       label="Guardar"
+                                       title="Guardar"
+                                       onclick="{!c.saveInvoice}"/>
+			</footer>
+		</div>
+	</aura:if>
+</aura:component>
